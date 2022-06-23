@@ -82,11 +82,20 @@ def buy():
             return apology("You must provide an amount", 400)
 
         # Add transaction to database
-        db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], "buy", crypto, amount, final_price, int(final_price) * amount)
+        db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", session["user_id"], "buy", crypto, amount, final_price, final_price * int(amount))
 
+        
+        # Select all info on user's portfolio
+        crypto_portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto)
+
+        if crypto_portfolio == []:
+            # Insert stock into stock_folio
+            crypto_portfolio = db.execute("INSERT INTO crypto_portfolio (user_id, crypto, num_of_coins, price_per_coin, total_amount) VALUES (?, ?, ?, ?, ?)", session["user_id"], crypto, amount, final_price, final_price * int(amount))
+        else:
+            # Update stock_folio
+            crypto_portfolio = db.execute("UPDATE crypto_portfolio SET num_of_coins = num_of_coins + ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto)
+        
         return redirect("/")
-
-        # currently timestamp is not working and total amount is not working
     
     else:
         return render_template("buy.html")
