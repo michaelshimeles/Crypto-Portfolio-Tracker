@@ -100,6 +100,47 @@ def buy():
     else:
         return render_template("buy.html")
 
+@app.route("/sell", methods=["GET", "POST"])
+@login_required
+def sell():
+    if request.method == "GET":
+        portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+        return render_template("sell.html", portfolio=portfolio)
+
+    elif request.method == "POST":
+        crypto_name = request.form.get("crypto")
+        amount = request.form.get("amount")
+
+        if not request.form.get("crypto"):
+            return apology("You must provide a crypto", 400)
+            
+        elif not request.form.get("amount"):
+            return apology("You must provide an amount", 400)
+        
+        if int(amount) < 0:
+            return apology("You must provide a positive amount", 400)
+
+        user_coins = db.execute("SELECT num_of_coins FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
+
+        if int(amount) > int(user_coins[0]["num_of_coins"]):
+            return apology("You don't have that many coins", 400)
+
+        coin_price = cg.get_price(crypto_name, vs_currencies='usd')
+        final_price = coin_price[crypto_name]["usd"]
+        
+        # Add transaction to database
+        add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", session["user_id"], "sell", crypto_name, amount, final_price, final_price * int(amount))
+
+        # Update user's portfolio
+        update_portfolio = db.execute("UPDATE crypto_portfolio SET num_of_coins = num_of_coins - ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto_name)
+
+        # remove crypto from portfolio if user has no coins
+        if int(user_coins[0]["num_of_coins"]) - int(amount) == 0:
+            db.execute("DELETE FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
+
+        return redirect("/")
+    
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 

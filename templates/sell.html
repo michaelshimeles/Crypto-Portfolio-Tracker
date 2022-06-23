@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Sell
+{% endblock %}
+
+{% block main %}
+<form action="/sell" method="post">
+    <div class="mb-3">
+        <select class="form-select mx-auto w-auto" name="crypto">
+            <option selected>Crypto</option>
+            {% for port in portfolio %}
+            <option><a class="dropdown-item" aria-expanded="true" id="crypto">{{ port.crypto }}</a></option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" class="form-control mx-auto w-auto" id="amount" name="amount" placeholder="Amount of Coins"
+            type="number">
+    </div>
+    <button class="btn btn-primary" type="submit">Sell</button>
+</form>
+{% endblock %}
