@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+History
+{% endblock %}
+
+{% block main %}
+<!-- Create table using for loop -->
+<table class="table container">
+    <thead>
+        <tr>
+            <th scope="col">Crypto</th>
+            <th scope="col">Number of Coins</th>
+            <th scope="col">Transaction Type</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Date & Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for portfolio in txs %}
+        <tr>
+            <td>{{ portfolio.crypto }}</td>
+            <td>{{ portfolio.num_of_coins }}</td>
+            <td>{{ portfolio.tx_type }}</td>
+            <td>{{ portfolio.price_per_coin | usd }}</td>
+            <td>{{ portfolio.total_amount_tx | usd }}</td>
+            <td>{{ portfolio.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

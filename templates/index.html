@@ -1,9 +1,37 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Register
+Portfolio
 {% endblock %}
 
 {% block main %}
-<h2>What's up</h2>
+<!-- Create table using for loop -->
+<h2 class="container">Your Crypto Portfolio</h2>
+<table class="table container">
+    <thead>
+        <tr>
+            <th scope="col">Crytpo</th>
+            <th scope="col">Number of Coins</th>
+            <th scope="col">Purchase Price</th>
+            <th scope="col">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for portfolio in crypto_portfolio %}
+        <tr>
+            <!-- uppercase text row -->
+            <td style="text-transform:uppercase">{{ portfolio.crypto }}</td>
+            <td>{{ portfolio.num_of_coins }}</td>
+            <td>{{ portfolio.price_per_coin | usd }}</td>
+            <td>{{ portfolio.total_amount | usd }}</td>
+        </tr>
+        {% endfor %}
+    <tfoot>
+        <tr>
+            <td class="border-0 fw-bold text-end" colspan="3" >Total:</td>
+            <td class="border-0">{{ total_value | usd }}</th>
+        </tr>
+    </tfoot>
+    </tbody>
+</table>
 {% endblock %}

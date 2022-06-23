@@ -43,7 +43,13 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html")
+    
+    crypto_portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+
+    total_value = db.execute("SELECT SUM(total_amount) FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+    total_value = total_value[0]['SUM(total_amount)']
+    
+    return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value)
 
 
 @app.route("/price", methods=["GET", "POST"])
@@ -140,6 +146,12 @@ def sell():
 
         return redirect("/")
     
+@app.route("/history")
+@login_required
+def history():
+    if request.method == "GET":
+        txs = db.execute("SELECT * FROM crypto_txs WHERE user_id = ?", session["user_id"])
+        return render_template("history.html", txs=txs)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
