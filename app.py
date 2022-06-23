@@ -48,8 +48,13 @@ def index():
 
     total_value = db.execute("SELECT SUM(total_amount) FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
     total_value = total_value[0]['SUM(total_amount)']
-    
-    return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value)
+
+    firstname = db.execute("SELECT firstname FROM users WHERE id = ?", session["user_id"])
+    lastname = db.execute("SELECT lastname FROM users WHERE id = ?", session["user_id"])
+
+    print(firstname[0]['firstname'])
+
+    return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value, firstname=firstname[0]['firstname'], lastname=lastname[0]['lastname'])
 
 
 @app.route("/price", methods=["GET", "POST"])
@@ -62,6 +67,7 @@ def price():
         # coinlist = cg.get_coins_list().lower() <- come back to this
 
         coin_price = cg.get_price(crypto, vs_currencies='usd')
+        coin_name = cg.get_coin_by_id(crypto)['name']
         final_price = coin_price[crypto]["usd"]
 
         return render_template("price.html", final_price=final_price)
