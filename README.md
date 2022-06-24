@@ -24,6 +24,8 @@ The tech stack that I used is as follows:
 - Coingecko API
 - Tradingview Integration
 
+In-order for this to work, user must "pip install pycoingecko"
+
 **Let's talk about the design**
 
 I wanted to go for a simple look, so bootstrap was perfect for the job.
