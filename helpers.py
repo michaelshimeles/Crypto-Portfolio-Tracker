@@ -37,4 +37,6 @@ def login_required(f):
 
 def usd(value):
     """Format value as USD."""
+    if value == None:
+        return ""
     return f"${value:,.2f}"

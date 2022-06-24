@@ -25,7 +25,7 @@ Portfolio
             <!-- uppercase text row -->
             <td style="text-transform:uppercase">{{ portfolio.crypto }}</td>
             <td>{{ portfolio.num_of_coins }}</td>
-            <td>{{ portfolio.price_per_coin }}</td>
+            <td>{{ portfolio.price_per_coin | usd}}</td>
             <td>{{ portfolio.total_amount | usd }}</td>
         </tr>
         {% endfor %}

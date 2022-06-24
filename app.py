@@ -90,15 +90,18 @@ def buy():
         coin_price = cg.get_price(crypto, vs_currencies='usd')
         final_price = coin_price[crypto]["usd"]
 
+        total_amount = final_price * int(amount)
+
         if not request.form.get("crypto"):
             return apology("You must provide a crypto", 400)
+    
 
         if not request.form.get("amount"):
             return apology("You must provide an amount", 400)
 
         # Add transaction to database
         add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-                            session["user_id"], "buy", crypto, amount, final_price, final_price * int(amount))
+                            session["user_id"], "buy", crypto, amount, final_price, total_amount)
 
         # Select all info on user's portfolio
         crypto_portfolio = db.execute(
@@ -107,15 +110,13 @@ def buy():
         if crypto_portfolio == []:
             # Insert stock into stock_folio
             crypto_portfolio = db.execute("INSERT INTO crypto_portfolio (user_id, crypto, num_of_coins, price_per_coin, total_amount) VALUES (?, ?, ?, ?, ?)",
-                                          session["user_id"], crypto, amount, final_price, (final_price * int(amount)))
+                                          session["user_id"], crypto, amount, final_price, total_amount)
         else:
             # Update stock_folio
             crypto_portfolio = db.execute(
                 "UPDATE crypto_portfolio SET num_of_coins = num_of_coins + ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto)
 
-        total_buy_amount = final_price * int(amount)
-
-        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = total_amount + ? WHERE user_id = ? AND crypto = ?", total_buy_amount, session["user_id"], crypto)
+        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = ? WHERE user_id = ? AND crypto = ?", total_amount, session["user_id"], crypto)
 
 
         return redirect("/")
@@ -158,15 +159,13 @@ def sell():
 
         # Add transaction to database
         add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-                            session["user_id"], "sell", crypto_name, amount, final_price, final_price * int(amount))
+                            session["user_id"], "sell", crypto_name, amount, final_price, total_sell_amount)
 
         # Update user's portfolio
         update_portfolio = db.execute(
             "UPDATE crypto_portfolio SET num_of_coins = num_of_coins - ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto_name)
         
-        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = total_amount - ? WHERE user_id = ? AND crypto = ?", total_sell_amount, session["user_id"], crypto_name)
-
-        return redirect("/")
+        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = ? WHERE user_id = ? AND crypto = ?", total_sell_amount, session["user_id"], crypto_name)
 
         # remove crypto from portfolio if user has no coins
         if int(user_coins[0]["num_of_coins"]) - int(amount) == 0:
