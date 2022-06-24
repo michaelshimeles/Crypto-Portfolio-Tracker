@@ -5,17 +5,34 @@ Buy
 {% endblock %}
 
 {% block main %}
-<img src="/static/buy.png" class="img-fluid container" style="width: 530px; height: 300px; margin-bottom: 30px" alt="sell crypto">
 
-<form action="/buy" method="post">
-    <div class="mb-3">
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="crypto" name="crypto"
+<h1 class="display-4 fw-bold lh-1 mb-3">Purchase Crypto</h1>
+<br>
+<p class="display-10 fw lh-1 mb-3 container">Somewhere stuck between revolutionary financial asset to straight up ponzi.</p>
+<p class="display-10 fw lh-1 mb-3 container">Crypto is definitely here to stay. Invest at your own risk</p>
+
+
+<div class="container col-xl-10 col-xxl-8 px-4 py-5" style="margin-top: -50px">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <img src="/static/wojak.gif" class="img-fluid container" style="width: 630px; height: 300px; margin-bottom: 30px" alt="sell crypto">
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form form action="/buy" method="post" class="p-4 p-md-5 border rounded-3 bg-light">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="crypto" name="crypto"
             placeholder="Crypto Name" type="text">
+            <label for="floatingInput">Crypto Name</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input class="form-control" id="amount" name="amount" placeholder="Amount" type="number">
+            <label for="floatingPassword">Amount</label>
+          </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Buy</button>
+          <hr class="my-4">
+          <small class="text-muted">By clicking you understand that you're essentially gambling. Be careful.</small>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-        <input class="form-control mx-auto w-auto" id="amount" name="amount" placeholder="Amount" type="number">
-    </div>
-
-    <button class="btn btn-primary" type="submit">Buy</button>
-</form>
+  </div>
 {% endblock %}

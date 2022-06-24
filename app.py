@@ -11,6 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, usd
 from pycoingecko import CoinGeckoAPI
 
+
 # Configure application
 app = Flask(__name__)
 
@@ -150,6 +151,11 @@ def sell():
             db.execute("DELETE FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
 
         return redirect("/")
+
+@app.route("/starter")
+@login_required
+def education():
+    return render_template("starter.html")
     
 @app.route("/history")
 @login_required
