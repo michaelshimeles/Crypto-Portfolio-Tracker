@@ -60,22 +60,9 @@ def index():
     return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value)
 
 
-@app.route("/price", methods=["GET", "POST"])
+@app.route("/price", methods=["GET"])
 @login_required
 def price():
-    if request.method == "POST":
-        crypto = request.form.get("crypto").lower()
-
-        # Check if crypto is valid
-        # coinlist = cg.get_coins_list().lower() <- come back to this
-
-        coin_price = cg.get_price(crypto, vs_currencies='usd')
-        coin_name = cg.get_coin_by_id(crypto)['name']
-        final_price = coin_price[crypto]["usd"]
-
-        return render_template("price.html", final_price=final_price, coin_name=coin_name)
-
-    else:
         return render_template("price.html")
 
 
