@@ -6,11 +6,12 @@ Portfolio
 
 {% block main %}
 <!-- Create table using for loop -->
-<h2 class="container">Welcome, {{ firstname }} {{ lastname }} 😘</h2>
+<h2 class="container">Welcome, {{ firstname }} {{ lastname }} 🚀</h2>
+<h6>Track your Crypto Portfolio with a few clicks</h4>
 <table class="table container">
     <thead>
         <tr>
-            <th scope="col">Crytpo</th>
+            <th scope="col">Crypto</th>
             <th scope="col">Number of Coins</th>
             <th scope="col">Purchase Price</th>
             <th scope="col">Total Amount</th>
@@ -22,14 +23,14 @@ Portfolio
             <!-- uppercase text row -->
             <td style="text-transform:uppercase">{{ portfolio.crypto }}</td>
             <td>{{ portfolio.num_of_coins }}</td>
-            <td>{{ portfolio.price_per_coin | usd }}</td>
-            <td>{{ portfolio.total_amount | usd }}</td>
+            <td>{{ portfolio.price_per_coin }}</td>
+            <td>{{ portfolio.total_amount }}</td>
         </tr>
         {% endfor %}
     <tfoot>
         <tr>
             <td class="border-0 fw-bold text-end" colspan="3" >Total:</td>
-            <td class="border-0">{{ total_value | usd }}</th>
+            <td class="border-0">{{ total_value }}</th>
         </tr>
     </tfoot>
     </tbody>
@@ -37,5 +38,46 @@ Portfolio
 
 
 <div>
+
+<h3> 3 Reasons You Should Start Investing*</h3>
+<p>*Not Financial Advice</p>
+
+<p>Write a paragraph about the high gas prices etc etc</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<canvas class="container" id="myChart" style="width:100%;max-width:600px"></canvas>
+
+<script>
+var xValues = [100,200,300,400,500,600,700,800,900,1000];
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{ 
+      label: 'Price of Big Mac',
+      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      borderColor: "red",
+      fill: false
+
+    }, { 
+      label: 'Gas prices',
+      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      borderColor: "green",
+      fill: false
+    }, { 
+      label: 'Minimum wage',
+      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      borderColor: "blue",
+      fill: false
+    }]
+  },
+  options: {
+    legend: {display: true}
+    
+
+  }
+});
+</script>
 
 {% endblock %}
