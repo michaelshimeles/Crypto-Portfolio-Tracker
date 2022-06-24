@@ -5,37 +5,34 @@ Price
 {% endblock %}
 
 {% block main %}
-<form action="/price" method="post">
-    <div class="mb-3">
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="crypto" name="crypto"
-            placeholder="Crypto" type="text">
-    </div>
-
-    <button class="btn btn-primary" type="submit">Search</button>
-</form>
-
-{{ final_price}}
-
-<canvas id="myChart" style="width:100%;max-width:600px;" class="container"></canvas>
-
-<script>
-    var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-
-    new Chart("myChart", {
-        type: "line",
-        data: {
-            labels: xValues,
-            datasets: [{
-                data: [860, 1140, 1060, 1060, 1070, 1110, 1330, 2210, 7830, 2478],
-                borderColor: "red",
-                fill: false
-            }]
-        },
-        options: {
-            legend: { display: false }
-        }
-    });
-</script>
+<h1 class="display-5 fw-bold lh-1 mb-3">Interactive Live Price Chart</h1>
+<p class="display-10 fw lh-1 mb-3 container">We've integrated Tradingview's charting software so you can feel good about your bad investments 😂</p>
+<br>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <div id="tradingview_8ff0a"></div>
+    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/NASDAQ-AAPL/" rel="noopener" target="_blank"><span class="blue-text">Interactive Chart</span></a> by TradingView</div>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+    new TradingView.widget(
+    {
+    "width": 980,
+    "height": 610,
+    "symbol": "BTCUSD",
+    "interval": "D",
+    "timezone": "Etc/UTC",
+    "theme": "light",
+    "style": "1",
+    "locale": "en",
+    "toolbar_bg": "#f1f3f6",
+    "enable_publishing": false,
+    "allow_symbol_change": true,
+    "container_id": "tradingview_8ff0a"
+  }
+    );
+    </script>
+  </div>
+  <!-- TradingView Widget END -->
 
 
 

@@ -7,7 +7,7 @@ Portfolio
 {% block main %}
 
 <!-- Create table using for loop -->
-<h2 class="display-4 fw-bold lh-1 mb-3">Welcome, {{ firstname }} {{ lastname }} 🚀</h2>
+<h2 class="display-6 fw-bold lh-1 mb-3">Hi, Try Not To Lose Your Money 🚀</h2>
 <h6 class="display-10 fw lh-1 mb-3 container">Track your Crypto Portfolio with a few clicks</h4>
 <br>
 <table class="table container">
@@ -26,13 +26,13 @@ Portfolio
             <td style="text-transform:uppercase">{{ portfolio.crypto }}</td>
             <td>{{ portfolio.num_of_coins }}</td>
             <td>{{ portfolio.price_per_coin }}</td>
-            <td>{{ portfolio.total_amount }}</td>
+            <td>{{ portfolio.total_amount | usd }}</td>
         </tr>
         {% endfor %}
     <tfoot>
         <tr>
             <td class="border-0 fw-bold text-end" colspan="3" >Total:</td>
-            <td class="border-0">{{ total_value }}</th>
+            <td class="border-0">{{ total_value | usd}}</th>
         </tr>
     </tfoot>
     </tbody>
@@ -43,47 +43,11 @@ Portfolio
 
 <div class="container">
 
-<h3 class="display-10 fw-bold lh-1 mb-3 container"> 3 Reasons You Should Start Investing*</h3>
+<h3 class="display-10 fw-bold lh-1 mb-3 container"> Educational Content To Help You Be A Better Investor*</h3>
 <p class="display-10 fw lh-1 mb-3 container">*Not Financial Advice</p>
 
-<p>Gas prices, living costs, rent, and EVEN BIG MACS have severly increased in price while wages have stayed the same</p>
-</div>
-
-<div class="container">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<canvas class="container" id="myChart" style="width:100%;max-width:600px"></canvas>
-
-<script>
-var xValues = [2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020];
-
-new Chart("myChart", {
-  type: "line",
-  data: {
-    labels: xValues,
-    datasets: [{ 
-      label: 'Price of Big Mac',
-      data: [2,3.50,4,5,6,7,8,9,10,14, 15],
-      borderColor: "red",
-      fill: false
-
-    }, { 
-      label: 'Gas prices',
-      data: [5,8,10,14,17,19,22,25,29,30, 35],
-      borderColor: "green",
-      fill: false
-    }, { 
-      label: 'Minimum wage',
-      data: [4,5,6,7,8,9,10,11,11,11,11],
-      borderColor: "blue",
-      fill: false
-    }]
-  },
-  options: {
-    legend: {display: true}
-    
-
-  }
-});
-</script>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7HWlx-rD5NU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6jQAJ-uf0OA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xRBMWp6fiX4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gwQeZelImb4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% endblock %}

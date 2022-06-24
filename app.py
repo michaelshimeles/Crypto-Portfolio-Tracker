@@ -44,17 +44,20 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    
-    crypto_portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
-    
 
-    total_value = db.execute("SELECT SUM(total_amount) FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+    crypto_portfolio = db.execute(
+        "SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+
+    total_value = db.execute(
+        "SELECT SUM(total_amount) FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
     total_value = total_value[0]['SUM(total_amount)']
 
-    firstname = db.execute("SELECT firstname FROM users WHERE id = ?", session["user_id"])
-    lastname = db.execute("SELECT lastname FROM users WHERE id = ?", session["user_id"])
+    firstname = db.execute(
+        "SELECT firstname FROM users WHERE id = ?", session["user_id"])
+    lastname = db.execute(
+        "SELECT lastname FROM users WHERE id = ?", session["user_id"])
 
-    return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value, firstname=firstname[0]['firstname'], lastname=lastname[0]['lastname'])
+    return render_template("index.html", crypto_portfolio=crypto_portfolio, total_value=total_value)
 
 
 @app.route("/price", methods=["GET", "POST"])
@@ -70,7 +73,7 @@ def price():
         coin_name = cg.get_coin_by_id(crypto)['name']
         final_price = coin_price[crypto]["usd"]
 
-        return render_template("price.html", final_price=final_price)
+        return render_template("price.html", final_price=final_price, coin_name=coin_name)
 
     else:
         return render_template("price.html")
@@ -94,29 +97,39 @@ def buy():
             return apology("You must provide an amount", 400)
 
         # Add transaction to database
-        db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", session["user_id"], "buy", crypto, amount, final_price, final_price * int(amount))
+        add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                            session["user_id"], "buy", crypto, amount, final_price, final_price * int(amount))
 
-        
         # Select all info on user's portfolio
-        crypto_portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto)
+        crypto_portfolio = db.execute(
+            "SELECT * FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto)
 
         if crypto_portfolio == []:
             # Insert stock into stock_folio
-            crypto_portfolio = db.execute("INSERT INTO crypto_portfolio (user_id, crypto, num_of_coins, price_per_coin, total_amount) VALUES (?, ?, ?, ?, ?)", session["user_id"], crypto, amount, final_price, final_price * int(amount))
+            crypto_portfolio = db.execute("INSERT INTO crypto_portfolio (user_id, crypto, num_of_coins, price_per_coin, total_amount) VALUES (?, ?, ?, ?, ?)",
+                                          session["user_id"], crypto, amount, final_price, (final_price * int(amount)))
         else:
             # Update stock_folio
-            crypto_portfolio = db.execute("UPDATE crypto_portfolio SET num_of_coins = num_of_coins + ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto)
-        
+            crypto_portfolio = db.execute(
+                "UPDATE crypto_portfolio SET num_of_coins = num_of_coins + ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto)
+
+        total_buy_amount = final_price * int(amount)
+
+        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = total_amount + ? WHERE user_id = ? AND crypto = ?", total_buy_amount, session["user_id"], crypto)
+
+
         return redirect("/")
-    
+
     else:
         return render_template("buy.html")
+
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
     if request.method == "GET":
-        portfolio = db.execute("SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
+        portfolio = db.execute(
+            "SELECT * FROM crypto_portfolio WHERE user_id = ?", session["user_id"])
         return render_template("sell.html", portfolio=portfolio)
 
     elif request.method == "POST":
@@ -125,44 +138,58 @@ def sell():
 
         if not request.form.get("crypto"):
             return apology("You must provide a crypto", 400)
-            
+
         elif not request.form.get("amount"):
             return apology("You must provide an amount", 400)
-        
+
         if int(amount) < 0:
             return apology("You must provide a positive amount", 400)
 
-        user_coins = db.execute("SELECT num_of_coins FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
+        user_coins = db.execute(
+            "SELECT num_of_coins FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
 
         if int(amount) > int(user_coins[0]["num_of_coins"]):
             return apology("You don't have that many coins", 400)
 
         coin_price = cg.get_price(crypto_name, vs_currencies='usd')
         final_price = coin_price[crypto_name]["usd"]
-        
+
+        total_sell_amount = final_price * int(amount)
+
         # Add transaction to database
-        add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", session["user_id"], "sell", crypto_name, amount, final_price, final_price * int(amount))
+        add_tx = db.execute("INSERT INTO crypto_txs (user_id, tx_type, crypto, num_of_coins, price_per_coin, total_amount_tx, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                            session["user_id"], "sell", crypto_name, amount, final_price, final_price * int(amount))
 
         # Update user's portfolio
-        update_portfolio = db.execute("UPDATE crypto_portfolio SET num_of_coins = num_of_coins - ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto_name)
+        update_portfolio = db.execute(
+            "UPDATE crypto_portfolio SET num_of_coins = num_of_coins - ? WHERE user_id = ? AND crypto = ?", int(amount), session["user_id"], crypto_name)
+        
+        update_total_amount = db.execute("UPDATE crypto_portfolio SET total_amount = total_amount - ? WHERE user_id = ? AND crypto = ?", total_sell_amount, session["user_id"], crypto_name)
+
+        return redirect("/")
 
         # remove crypto from portfolio if user has no coins
         if int(user_coins[0]["num_of_coins"]) - int(amount) == 0:
-            db.execute("DELETE FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
+            num_of_coins_update = db.execute(
+                "DELETE FROM crypto_portfolio WHERE user_id = ? AND crypto = ?", session["user_id"], crypto_name)
 
         return redirect("/")
+
 
 @app.route("/starter")
 @login_required
 def education():
     return render_template("starter.html")
-    
+
+
 @app.route("/history")
 @login_required
 def history():
     if request.method == "GET":
-        txs = db.execute("SELECT * FROM crypto_txs WHERE user_id = ?", session["user_id"])
+        txs = db.execute(
+            "SELECT * FROM crypto_txs WHERE user_id = ?", session["user_id"])
         return render_template("history.html", txs=txs)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

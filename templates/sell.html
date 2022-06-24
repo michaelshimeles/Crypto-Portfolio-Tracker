@@ -5,20 +5,32 @@ Sell
 {% endblock %}
 
 {% block main %}
-<img src="/static/sell.jpg" class="img-fluid container" style="width: 530px; height: 300px; margin-bottom: 30px" alt="sell crypto">
-<form action="/sell" method="post">
-    <div class="mb-3">
-        <select class="form-select mx-auto w-auto" name="crypto">
-            <option selected>Crypto</option>
-            {% for port in portfolio %}
-            <option><a class="dropdown-item" aria-expanded="true" id="crypto">{{ port.crypto }}</a></option>
-            {% endfor %}
-        </select>
+
+<h1 class="display-4 fw-bold lh-1 mb-3">Sell Crypto</h1>
+<p class="display-10 fw lh-1 mb-3 container">Probably at a loss 😂</p>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5" style="margin-top: -50px">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <img src="/static/sell.jpg" class="img-fluid container" style="width: 630px; height: 300px; margin-bottom: 30px" alt="sell crypto">
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form action="/sell" method="post" class="p-4 p-md-5 border rounded-3 bg-light">
+            <select class=" form-select mx-auto w-auto" name="crypto">
+                <option selected>Crypto</option>
+                {% for port in portfolio %}
+                <option><a class="dropdown-item" aria-expanded="true" id="crypto">{{ port.crypto }}</a></option>
+                {% endfor %}
+            </select>
+          <br>
+          <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" class="form-control mx-auto w-auto" id="amount" name="amount" placeholder="Amount of Coins"
+                type="number">
+        </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sell</button>
+          <hr class="my-4">
+          <small class="text-muted">Quick Question. Will tell your spouse/parents the losses your taking? Why did you ever invest in this? 😂</small>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" class="form-control mx-auto w-auto" id="amount" name="amount" placeholder="Amount of Coins"
-            type="number">
-    </div>
-    <button class="btn btn-primary" type="submit">Sell</button>
-</form>
+  </div>
 {% endblock %}
