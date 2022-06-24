@@ -37,18 +37,20 @@ Portfolio
 </table>
 
 
-<div>
+<div class="container">
 
 <h3> 3 Reasons You Should Start Investing*</h3>
 <p>*Not Financial Advice</p>
 
 <p>Write a paragraph about the high gas prices etc etc</p>
+</div>
 
+<div class="container">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <canvas class="container" id="myChart" style="width:100%;max-width:600px"></canvas>
 
 <script>
-var xValues = [100,200,300,400,500,600,700,800,900,1000];
+var xValues = [2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020];
 
 new Chart("myChart", {
   type: "line",
@@ -56,18 +58,18 @@ new Chart("myChart", {
     labels: xValues,
     datasets: [{ 
       label: 'Price of Big Mac',
-      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      data: [2,3.50,4,5,6,7,8,9,10,14, 15],
       borderColor: "red",
       fill: false
 
     }, { 
       label: 'Gas prices',
-      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      data: [5,8,10,14,17,19,22,25,29,30, 35],
       borderColor: "green",
       fill: false
     }, { 
       label: 'Minimum wage',
-      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      data: [4,5,6,7,8,9,10,11,11,11,11],
       borderColor: "blue",
       fill: false
     }]
@@ -79,5 +81,5 @@ new Chart("myChart", {
   }
 });
 </script>
-
+</div>
 {% endblock %}
